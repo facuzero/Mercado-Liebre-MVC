@@ -7,55 +7,122 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 const toThousand = require('../utils/toThousand');
 const toDiscount = require('../utils/toDiscount');
 
+const db = require('../database/models')
+
 const controller = {
 	// Root - Show all products
 	index: (req, res) => {
 		// Do the magic
-		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
-		return res.render('products',{
-			products,
-			toThousand,
-			toDiscount
+		let hogar = db.Category.findOne({
+			where : {
+				name : 'hogar'
+			},
+			include : [
+				{association : 'products',
+				include : [{all:true}]}
+			]
 		})
+		let informatica = db.Category.findOne({
+			where : {
+				name : 'informatica'
+			},
+			include : [
+				{association : 'products',
+				include : [{all:true}]}
+			]
+		})
+		let audio = db.Category.findOne({
+			where : {
+				name : 'audio y video'
+			},
+			include : [
+				{association : 'products',
+				include : [{all:true}]}
+			]
+		})
+		let celulares = db.Category.findOne({
+			where : {
+				name : 'celulares'
+			},
+			include : [
+				{association : 'products',
+				include : [{all:true}]}
+			]
+		})
+		Promise.all([hogar,informatica,audio,celulares])
+		.then(([hogar,informatica,audio,celulares]) => {
+			return res.render('products',{
+				hogar,
+				informatica,
+				audio,
+				celulares,
+				toThousand,
+				toDiscount
+			})
+		})
+		.catch(error => console.log(error))
+		
 	},
 
 	// Detail - Detail from one product
 	detail: (req, res) => {
 		// Do the magic
-		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
-
-		return res.render('detail',{
-			product : products.find(product => product.id === +req.params.id),
-			toDiscount,
-			toThousand
+		db.Product.findByPk(req.params.id,{
+			include :[{all:true}]
+		})
+		.then(product => {
+			return res.render('detail',{
+				product,
+				toDiscount,
+				toThousand
+			})
 		})
 	},
 
 	// Create - Form to create
 	create: (req, res) => {
 		// Do the magic
-		return res.render('product-create-form')
+		let categories = db.Category.findAll();
+		let sections = db.Section.findAll();
+		Promise.all([categories,sections])
+			.then(([categories,sections]) => {
+				return res.render('product-create-form',{
+					categories,
+					sections
+				})
+			})
+			.catch(error => console.error(error))
 
 	},
 	
 	// Create -  Method to store
 	store: (req, res) => {
 		// Do the magic
-		const {name,price,discount,category,description} = req.body;
-		let product = {
-			id : products[products.length - 1].id + 1,
-			name: name.trim(),
-			price : +price,
-			discount : +discount,
-			category,
-			description: description.trim(),
-			image: 'default-image.png'
-		}
-		products.push(product)
+		const {name,price,discount,category,section,description} = req.body;
 
-		fs.writeFileSync(path.join(__dirname,'..','data','productsDataBase.json'),JSON.stringify(products,null,3),'utf-8');
-
-		res.redirect('/products')
+		db.Product.create({
+			name : name.trim(),
+			price,
+			discount,
+			categoryId : category,
+			sectionId : section,
+			description : description.trim(),
+		})
+			.then( product => {
+				if(req.files.length > 0) {
+					let images = req.files.map(img => {
+						let image = {
+							file : img.filename,
+							productId : product.id
+						}
+						return image
+					})
+					db.Image.bulkCreate(images,{validate : true})
+						.then( () => console.log('imagenes guardadas'))
+				}
+				return res.redirect('/products')
+			})
+			.catch(error => console.log(error))
 	},
 
 	// Update - Form to edit
