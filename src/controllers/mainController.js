@@ -13,6 +13,9 @@ const { Op } = require("sequelize");
 
 const controller = {
 	index: (req, res) => {
+
+		req.session.cart = [];
+
 		// Do the magic
 		let novedades = db.Product.findAll({
 			include: [{ all: true }],
@@ -40,6 +43,9 @@ const controller = {
 
 		Promise.all([novedades, cuidados, ofertas])
 			.then(([novedades, cuidados, ofertas]) => {
+
+
+
 				return res.render('index', {
 					novedades,
 					cuidados,
