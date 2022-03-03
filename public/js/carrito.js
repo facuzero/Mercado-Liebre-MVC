@@ -2,17 +2,17 @@ console.log('carrito connected success!')
 
 const getCarrito = async () => {
 
-try {
-    const response = await fetch('/api/cart/show')
-    const result = await response.json()
+    try {
+        const response = await fetch('/api/cart/show')
+        const result = await response.json()
 
-    if(ok){
-        console.log(result);
+        if (result.ok) {
+            console.log(result);
+        }
+
+    } catch (error) {
+        console.error(error);
     }
-
-} catch (error) {
-    console.error(error);
-}
 
 }
 

@@ -86,6 +86,9 @@ const controller = {
 			})
 
 	},
+	carrito : (req, res) => {
+		return res.render('cart')
+	}
 };
 
 module.exports = controller;
