@@ -50,7 +50,7 @@
 							</li>
 						</ul>
 
-						<a href="#" class="buy-now-button">COMPRAR AHORA</a>
+						<button onclick="addItem('<%=product.id%>')" class="buy-now-button">AGREGAR A CARRITO</button>
 						<hr>
 
 						<a href="/products/edit/<%= product.id %>" class="action-button edit">EDITAR PRODUCTO</a>
@@ -66,6 +66,8 @@
 
 	<!-- footer -->
 	<%- include('partials/footer') %>
+	<%- include('partials/scripts') %>
+
 	<!-- /footer -->
 
 </body>	
