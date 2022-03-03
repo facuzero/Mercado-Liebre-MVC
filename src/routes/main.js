@@ -7,6 +7,7 @@ const mainController = require('../controllers/mainController');
 
 router.get('/', mainController.index); 
 router.get('/search', mainController.search); 
+router.get('/carrito', mainController.carrito);
 
 module.exports = router;
 

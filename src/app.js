@@ -18,9 +18,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method')); // Pasar poder pisar el method="POST" en el formulario por PUT y DELETE
-app.use(session({
-  secret: "mercadoLiebre"
-}))
 
 // ************ Template Engine - (don't touch) ************
 app.set('view engine', 'ejs');
@@ -33,6 +30,9 @@ app.set('views', path.join(__dirname, '/views')); // Define la ubicación de la 
 const mainRouter = require('./routes/main'); // Rutas main
 const productsRouter = require('./routes/products'); // Rutas /products
 const usersRouter = require('./routes/users'); // Rutas /users
+
+app.use(session({ secret: "artisticaDali", resave: false, saveUninitialized: true })) 
+
 
 app.use('/', mainRouter);
 app.use('/products', productsRouter);

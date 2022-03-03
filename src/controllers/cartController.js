@@ -1,51 +1,62 @@
 const db = require('../database/models')
 module.exports = {
-    show: async (req,res) => {//necesito req.session del mainController 43
-        req.sessionCart=[]
+    show : async (req,res) => {
+
         if(!req.session.cart){
-            return res.status(500).json({//500 error de servidor
-                ok:false,
-                msg: 'Comuniquese con el admin'
+            return res.status(500).json({
+                ok : false,
+                msg : 'Comuníquese con el administrador!'
             })
-        }   
-        let response = {
-            ok:true,
-            meta:{
-                //link:,
-                total: req.session.cart.length
-            },
-            data: req.session.cart
         }
-        return res.status(200).json(response);
+
+        let response = {
+            ok: true,
+            meta : {
+                total : req.session.cart.length
+            },
+            data : req.session.cart
+        }
+
+        return res.status(200).json(response)
     },
-    add : async(req,res) => {
+    add : async (req,res) => {
         try {
+
             let product = await db.Product.findByPk(req.params.id,{
-                includes:[{ //Se trae todas las asociaciones
-                    all : true
-                }]
-            })}
-            const {id,name,price,discount}= product
-            
+                include : [
+                    {association : 'images',
+                        attributes : ['file']
+                    }
+                ]
+            });
+
+            const {id, name, price, discount} = product;
+
             let item = {
                 id,
                 name,
                 price,
                 discount,
-                image : product.images[0],
-                amount:1,
-                total:price
+                image : product.images[0].file,
+                amount : 1,
+                total : price
             }
+            if(!req.session.cart){
+                req.session.cart = []
+            }
+            
             req.session.cart.push(item)
-            console.log(product)
+
             let response = {
-                ok:true,
-                /* meta:{
-                    total: req.session.cart.length
-                }, */
-                data: req.session.cart
+                ok: true,
+                meta : {
+                    total : req.session.cart.length
+                },
+                data : req.session.cart
             }
-            return res.status(200).json(response);
+    
+            return res.status(200).json(response)
+            
         } catch (error) {
             console.log(error)
         }
