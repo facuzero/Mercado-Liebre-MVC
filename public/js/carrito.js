@@ -4,7 +4,7 @@ const getCarrito = async() => {
     try {
         const response = await fetch('/api/cart/show')
         const result = await response.json()
-        if(ok){
+        if(result.ok){
             console.log(result);
         }
     } catch (error) {
