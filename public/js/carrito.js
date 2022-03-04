@@ -42,15 +42,38 @@ const addItem = async (id) => {
 
 }
 
+const removeItem = async (id) => {
+
+    try {
+        
+        const response = await fetch(`/api/cart/${id}`, {
+            method: 'DELETE'
+        })
+        const result = await response.json()
+
+        if (result.ok) {
+            cargarTabla(result.data)
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+
+}
+
 
 const cargarTabla = (data) => {
 
     carrito.innerHTML = null;
 
-    data.forEach(({amount,image,name,price,total}) => {
+    data.forEach(({id,amount,image,name,price,total}) => {
         let item = `
         <tr>
-        <th scope="row">${amount}</th>
+        <th scope="row">
+        <button class="btn btn-danger" onclick="removeItem('${id}')" ><i class="fas fa-minus-square"></i></button>
+        ${amount}
+        <button class="btn btn-success" onclick="addItem('${id}')" ><i class="fas fa-plus-square"></i></button>
+        </th>
         <td><img src="/images/products/${image}" class="w-25" /> </td>
         <td>${name}</td>
         <td>${price}</td>
@@ -63,4 +86,4 @@ const cargarTabla = (data) => {
 
 }
 
-getCarrito();
+carrito && getCarrito();
