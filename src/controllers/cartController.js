@@ -93,5 +93,33 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+    remove: async (req,res) => {
+
+        try {
+            let index = productVerify(req.session.cart,req.params.id);
+            let product = req.session.cart[index]
+            if(product.amount > 1){
+
+                product.amount--;
+                product.total = product.amount * product.price;
+                req.session.cart[index] = product;
+
+            }else{
+                req.session.cart.splice(index,1)
+            }
+
+            let response = {
+                ok: true,
+                meta : {
+                    total : req.session.cart.length
+                },
+                data : req.session.cart
+            }
+    
+            return res.status(200).json(response)
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
