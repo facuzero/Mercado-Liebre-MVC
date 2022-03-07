@@ -154,9 +154,28 @@ module.exports = {
                 product.total = product.amount * product.price;
                 req.session.cart[index] = product;
 
+                await db.Cart.update(
+                    {
+                        quantity : product.amount
+                    },
+                    {
+                        where : {
+                            orderId : product.orderId,
+                            productId : product.id
+                        }
+                    }
+                )
+
             }else{
 
                 req.session.cart.splice(index,1);
+
+                await db.Cart.destroy({
+                    where : {
+                        productId : product.id,
+                        orderId : product.orderId
+                    }
+                })
 
             }
 
@@ -171,7 +190,68 @@ module.exports = {
             return res.status(200).json(response)
 
         } catch (error) {
-            
+            console.log(error);
+            return res.status(500).json(error)
         }
-    }
+    },
+    removeItem : async (req,res) => {
+
+        try {
+            
+            let index = productVerify(req.session.cart,req.params.id);
+            let product = req.session.cart[index];
+            
+            req.session.cart.splice(index,1);
+
+            await db.Cart.destroy({
+                where : {
+                    productId : product.id,
+                    orderId : product.orderId
+                }
+            })
+
+            let response = {
+                ok: true,
+                meta : {
+                    total : req.session.cart.length
+                },
+                data : req.session.cart
+            }
+    
+            return res.status(200).json(response)
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error)
+        }
+    },
+    empty : async (req,res) => {
+
+        try {
+
+            await db.Order.destroy({
+                where : {
+                    userId : req.session.userLogin.id,
+                    status : 'pending'
+                }
+            })
+
+            req.session.cart = [];
+
+            let response = {
+                ok: true,
+                meta : {
+                    total : req.session.cart.length
+                },
+                data : req.session.cart
+            }
+    
+            return res.status(200).json(response)
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error)
+        }
+    } 
+
 }

@@ -60,6 +60,38 @@ const removeItem = async (id) => {
     }
 }
 
+const removeAllItem = async (id) => {
+
+    try {
+        const response = await fetch(`/api/cart/item/${id}`, {
+            method: 'DELETE'
+        })
+        const result = await response.json()
+
+        if (result.ok) {
+            cargarTabla(result.data)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const emptyCart = async () => {
+
+    try {
+        const response = await fetch(`/api/cart/empty`, {
+            method: 'DELETE'
+        })
+        const result = await response.json()
+
+        if (result.ok) {
+            cargarTabla(result.data)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const cargarTabla = (data) => {
 
     carrito.innerHTML = null;
@@ -76,7 +108,7 @@ const cargarTabla = (data) => {
         <td>${name}</td>
         <td>${price}</td>
         <td>${total}</td>
-        <td><button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeAllItem('${id}')"><i class="fas fa-trash-alt"></i></button></td>
       </tr>
         `
         carrito.innerHTML += item

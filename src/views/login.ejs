@@ -21,7 +21,7 @@
           <div class="row">
           <div class="form-group col-12 ">
             <label for="email"></label>
-            <input type="email" autocomplete="off"
+            <input type="email" 
             class="form-input" <%= (typeof old != 'undefined' && old.email && !errors.email)?"is-valid":(typeof errors != 'undefined' && errors.email)?"is-invalid": ""  %>"
             id="email" value="<%= (typeof old != 'undefined' && old.email)?old.email:'' %>" placeholder="email" name="email"/>
             <small id="errorEmail" class="text-danger"><%= (typeof errors != 'undefined' && errors.email)?errors.email.msg: "" %> </small>

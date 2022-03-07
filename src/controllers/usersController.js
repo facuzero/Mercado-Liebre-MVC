@@ -79,5 +79,9 @@ module.exports = {
 
         }).catch(error => console.log(error))
       
+    },
+    logout : (req,res) => {
+        req.session.destroy();
+        return res.redirect('/');
     }
 }
