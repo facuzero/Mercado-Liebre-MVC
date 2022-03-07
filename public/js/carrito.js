@@ -58,9 +58,7 @@ const removeItem = async (id) => {
     } catch (error) {
         console.error(error)
     }
-
 }
-
 
 const cargarTabla = (data) => {
 

@@ -6,7 +6,8 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const methodOverride =  require('method-override'); // Pasar poder usar los métodos PUT y DELETE
-const session = require('express-session')
+const session = require('express-session');
+const localsUserCheck = require('./middlewares/localsUserCheck')
 
 
 // ************ express() - (don't touch) ************
@@ -35,6 +36,7 @@ const usersRouter = require('./routes/users'); // Rutas /users
 
 app.use(session({ secret: "artisticaDali", resave: false, saveUninitialized: true })) 
 
+app.use(localsUserCheck);
 
 app.use('/', mainRouter);
 app.use('/products', productsRouter);
