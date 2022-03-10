@@ -159,8 +159,8 @@ module.exports = {
                         quantity : product.amount
                     },
                     {
-                        where: {
-                            orderId: product.orderId,
+                        where : {
+                            orderId : product.orderId,
                             productId : product.id
                         }
                     }
@@ -170,14 +170,12 @@ module.exports = {
 
                 req.session.cart.splice(index,1);
 
-                await db.Cart.destroy(
-                    {
-                        where: {
-                            productId: product.orderId,
-                            orderId: product.id
-                        }
+                await db.Cart.destroy({
+                    where : {
+                        productId : product.id,
+                        orderId : product.orderId
                     }
-                )
+                })
 
             }
 
@@ -192,53 +190,26 @@ module.exports = {
             return res.status(200).json(response)
 
         } catch (error) {
-            
+            console.log(error);
+            return res.status(500).json(error)
         }
     },
-    remove: async (req,res) => {
+    removeItem : async (req,res) => {
 
-        try {
-            let index = productVerify(req.session.cart,req.params.id);
-            let product = req.session.cart[index]
-            if(product.amount > 1){
-
-                product.amount--;
-                product.total = product.amount * product.price;
-                req.session.cart[index] = product;
-
-            }else{
-                req.session.cart.splice(index,1)
-            }
-
-            let response = {
-                ok: true,
-                meta : {
-                    total : req.session.cart.length
-                },
-                data : req.session.cart
-            }
-    
-            return res.status(200).json(response)
-        } catch (error) {
-            console.error(error)
-        }
-    },
-    RemoveItem: async (req,res)=>{
         try {
             
             let index = productVerify(req.session.cart,req.params.id);
             let product = req.session.cart[index];
-
+            
             req.session.cart.splice(index,1);
 
-            await db.Cart.destroy(
-                {
-                    where: {
-                        productId: product.orderId,
-                        orderId: product.id
-                    }
+            await db.Cart.destroy({
+                where : {
+                    productId : product.id,
+                    orderId : product.orderId
                 }
-            )
+            })
+
             let response = {
                 ok: true,
                 meta : {
@@ -246,21 +217,26 @@ module.exports = {
                 },
                 data : req.session.cart
             }
+    
+            return res.status(200).json(response)
 
         } catch (error) {
-            console.error(error)
+            console.log(error);
+            return res.status(500).json(error)
         }
     },
-    empty : async(req,res)=>{
+    empty : async (req,res) => {
+
         try {
-            
+
             await db.Order.destroy({
-                where: {
-                    userId: req.session.userLogin.id,
-                    status:'pending'
-                }                
+                where : {
+                    userId : req.session.userLogin.id,
+                    status : 'pending'
+                }
             })
-            req.session.cart= []
+
+            req.session.cart = [];
 
             let response = {
                 ok: true,
@@ -269,8 +245,13 @@ module.exports = {
                 },
                 data : req.session.cart
             }
-        } catch (error) {
+    
+            return res.status(200).json(response)
             
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error)
         }
-    }
+    } 
+
 }

@@ -81,7 +81,7 @@ module.exports = {
       
     },
     logout : (req,res) => {
-        req.session.destroy()
-        res.redirect('/')
+        req.session.destroy();
+        return res.redirect('/');
     }
 }

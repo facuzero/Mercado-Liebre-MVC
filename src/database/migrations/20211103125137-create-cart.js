@@ -14,8 +14,9 @@ module.exports = {
           model :{
             tableName : 'Orders'
           },
-          key : 'id'
-        }
+          key : 'id',
+        },
+        onDelete: 'cascade'
       },
       productId: {
         type: Sequelize.INTEGER,

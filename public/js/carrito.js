@@ -59,6 +59,36 @@ const removeItem = async (id) => {
     }
 }
 
+/* const emprtCart = async () => {
+    try {
+        const response = await fetch(`/api/cart/empty`, {
+            method: 'DELETE'
+        })
+        const result = await response.json()
+
+        if (result.ok) {
+            cargarTabla(result.data)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const removeAllItem = async (id) => {
+
+    try {
+        const response = await fetch(`/api/cart/item/${id}`, {
+            method: 'DELETE'
+        })
+        const result = await response.json()
+
+        if (result.ok) {
+            cargarTabla(result.data)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+} */
 const removeAllItem = async(id)=>{
     try {
         const response = await fetch(`/api/cart/item/${id}`, {
@@ -74,7 +104,9 @@ const removeAllItem = async(id)=>{
     }
 }
 
-const emprtCart = async () => {
+
+const emptyCart = async () => {
+
     try {
         const response = await fetch(`/api/cart/empty`, {
             method: 'DELETE'
@@ -105,7 +137,11 @@ const cargarTabla = (data) => {
         <td>${name}</td>
         <td>${price}</td>
         <td>${total}</td>
+<<<<<<< HEAD
         <td><button class="btn btn-sm btn-danger onclick="removeAllItem('${id}')" ><i class="fas fa-trash-alt"></i></button></td>
+=======
+        <td><button class="btn btn-sm btn-danger" onclick="removeAllItem('${id}')"><i class="fas fa-trash-alt"></i></button></td>
+>>>>>>> df7a9209b2fb565a87f8d029245ceab7542af363
       </tr>
         `
         carrito.innerHTML += item
