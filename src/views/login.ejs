@@ -15,13 +15,13 @@
 				<h2 class="products-title mb-4">Formulario de Login</h2>
 			</div>
 		<div class="col-12 product-detail py-4">
-      <form id="register" action="" method="POST" enctype="multipart/form-data">
+      <form id="register" action="" method="POST">
 
      
           <div class="row">
           <div class="form-group col-12 ">
             <label for="email"></label>
-            <input type="email" autocomplete="off"
+            <input type="email"
             class="form-input" <%= (typeof old != 'undefined' && old.email && !errors.email)?"is-valid":(typeof errors != 'undefined' && errors.email)?"is-invalid": ""  %>"
             id="email" value="<%= (typeof old != 'undefined' && old.email)?old.email:'' %>" placeholder="email" name="email"/>
             <small id="errorEmail" class="text-danger"><%= (typeof errors != 'undefined' && errors.email)?errors.email.msg: "" %> </small>
@@ -55,4 +55,3 @@
 	
 </body>	
 </html>
-
