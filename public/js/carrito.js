@@ -137,11 +137,7 @@ const cargarTabla = (data) => {
         <td>${name}</td>
         <td>${price}</td>
         <td>${total}</td>
-<<<<<<< HEAD
-        <td><button class="btn btn-sm btn-danger onclick="removeAllItem('${id}')" ><i class="fas fa-trash-alt"></i></button></td>
-=======
         <td><button class="btn btn-sm btn-danger" onclick="removeAllItem('${id}')"><i class="fas fa-trash-alt"></i></button></td>
->>>>>>> df7a9209b2fb565a87f8d029245ceab7542af363
       </tr>
         `
         carrito.innerHTML += item
